@@ -3,9 +3,7 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        <p className="text-muted-foreground">
-          Welcome back, User!
-        </p>
+        <p className="text-muted-foreground">Welcome back, User!</p>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
