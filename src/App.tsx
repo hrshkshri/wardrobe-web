@@ -8,8 +8,6 @@ import { Toaster } from 'sonner';
 import { useAuthStore } from '@/store/authStore';
 import { queryClient } from '@/lib/queryClient';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { ModalProvider } from '@/contexts/ModalContext';
-import { ModalContainer } from '@/components/ModalContainer';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import DashboardLayout from './layout/DashboardLayout';
@@ -59,11 +57,8 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <ModalProvider>
-          <RouterProvider router={appRouter} />
-          <ModalContainer />
-          <Toaster position="top-right" richColors />
-        </ModalProvider>
+        <RouterProvider router={appRouter} />
+        <Toaster position="top-right" richColors />
       </QueryClientProvider>
     </ErrorBoundary>
   );
