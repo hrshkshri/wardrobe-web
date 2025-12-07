@@ -1,6 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/store/authStore';
-import { authService } from '@/services/auth.service';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,21 +6,10 @@ import { Outlet } from 'react-router-dom';
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
 
-  const handleLogout = async () => {
-    await authService.logout();
+  const handleLogout = () => {
+    // Logout logic will be added when integrating API
     navigate('/auth/login');
-  };
-
-  const getAvatarInitials = (name?: string) => {
-    return (
-      name
-        ?.split(' ')
-        .map((word) => word[0])
-        .join('')
-        .toUpperCase() || 'U'
-    );
   };
 
   return (
@@ -36,12 +23,12 @@ export default function DashboardLayout() {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.avatar} alt={user?.name} />
-              <AvatarFallback>{getAvatarInitials(user?.name)}</AvatarFallback>
+              <AvatarImage src="" alt="User" />
+              <AvatarFallback>U</AvatarFallback>
             </Avatar>
             <div className="hidden md:block">
-              <p className="text-sm font-medium">{user?.name}</p>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <p className="text-sm font-medium">User Name</p>
+              <p className="text-xs text-muted-foreground">user@example.com</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={handleLogout}>

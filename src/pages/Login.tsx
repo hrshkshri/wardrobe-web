@@ -1,27 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/store/authStore';
-import { authService } from '@/services/auth.service';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { isLoading, error } = useAuthStore();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    const credentials = {
-      email: formData.get('email') as string,
-      password: formData.get('password') as string,
-    };
-
-    const result = await authService.login(credentials);
-
-    if (result) {
-      navigate('/dashboard');
-    }
+    // Login logic will be added when integrating API
+    navigate('/dashboard');
   };
 
   return (
@@ -31,12 +18,6 @@ const Login = () => {
         <p className="text-center text-muted-foreground mb-8">
           Sign in to your account
         </p>
-
-        {error && (
-          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-            <p className="text-sm text-destructive">{error.message}</p>
-          </div>
-        )}
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
@@ -49,7 +30,6 @@ const Login = () => {
               type="email"
               placeholder="you@example.com"
               required
-              disabled={isLoading}
             />
           </div>
 
@@ -63,12 +43,11 @@ const Login = () => {
               type="password"
               placeholder="••••••••"
               required
-              disabled={isLoading}
             />
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Signing in...' : 'Sign in'}
+          <Button type="submit" className="w-full">
+            Sign in
           </Button>
         </form>
       </div>

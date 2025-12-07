@@ -1,46 +1,27 @@
-import { QueryClientProvider } from '@tanstack/react-query';
 import {
   RouterProvider,
   createBrowserRouter,
   Navigate,
 } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { useAuthStore } from '@/store/authStore';
-import { queryClient } from '@/lib/queryClient';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import DashboardLayout from './layout/DashboardLayout';
 
-const RedirectRoute = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? <Navigate to="/dashboard" /> : <Login />;
-};
-
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  return isAuthenticated ? children : <Navigate to="/auth/login" />;
-};
-
 const appRouter = createBrowserRouter([
   {
     path: '/auth/login',
-    element: <RedirectRoute />,
+    element: <Login />,
   },
   {
     path: '/dashboard',
-    element: (
-      <ProtectedRoute>
-        <DashboardLayout />
-      </ProtectedRoute>
-    ),
+    element: <DashboardLayout />,
     children: [
       {
         path: '',
         element: <Dashboard />,
       },
-      // { path: 'profile', element: <ProfilePage /> },
-      // { path: 'settings', element: <SettingsPage /> },
     ],
   },
   {
@@ -56,10 +37,8 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <RouterProvider router={appRouter} />
-        <Toaster position="top-right" richColors />
-      </QueryClientProvider>
+      <RouterProvider router={appRouter} />
+      <Toaster position="top-right" richColors />
     </ErrorBoundary>
   );
 }
