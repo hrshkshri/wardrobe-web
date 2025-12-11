@@ -150,7 +150,7 @@ const RegisterForm = () => {
         {/* Sign Up Button */}
         <Button
           type="submit"
-          className="w-full mt-10 py-3 rounded-lg text-base font-medium"
+          className="w-full mt-10 py-3 rounded-lg text-base font-medium hover:cursor-pointer"
         >
           Create Account
         </Button>
@@ -167,7 +167,7 @@ const RegisterForm = () => {
       <Button
         type="button"
         variant="outline"
-        className="w-full border border-gray-300 text-black py-3 rounded-lg text-base font-medium hover:bg-gray-50 transition-colors duration-200"
+        className="w-full border border-gray-300 text-black py-3 rounded-lg text-base font-medium hover:bg-gray-50 hover:cursor-pointer transition-colors duration-200"
       >
         Continue with Google
       </Button>

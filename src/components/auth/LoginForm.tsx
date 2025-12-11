@@ -1,32 +1,43 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuthStore } from '@/stores/auth';
+import { loginSchema } from '@/schemas/auth';
+import { ZodError } from 'zod';
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const { login, isLoading, token } = useAuthStore();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
 
-    if (!email || !password) {
-      setError('Please fill in all fields');
-      return;
+    try {
+      // Validate input with Zod
+      loginSchema.parse({ email, password });
+
+      // Call login from auth store
+      await login(email, password);
+    } catch (err) {
+      if (err instanceof ZodError) {
+        // Handle validation errors
+        const firstError = err.issues[0]?.message;
+        toast.error(firstError || 'Validation failed');
+      }
+      // API errors are already handled in auth store with toast
     }
-
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('Please enter a valid email');
-      return;
-    }
-
-    navigate('/dashboard');
   };
+
+  // Navigate to dashboard when token is set
+  if (token) {
+    navigate('/dashboard');
+  }
 
   return (
     <>
@@ -82,19 +93,13 @@ const LoginForm = () => {
           </div>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="text-sm text-red-600 bg-red-50 p-4 rounded-lg">
-            {error}
-          </div>
-        )}
-
         {/* Sign In Button */}
         <Button
           type="submit"
-          className="w-full mt-10 py-3 rounded-lg text-base font-medium"
+          disabled={isLoading}
+          className="w-full mt-10 py-3 rounded-lg text-base font-medium disabled:opacity-50 hover:cursor-pointer"
         >
-          Sign In
+          {isLoading ? 'Signing in...' : 'Sign In'}
         </Button>
       </form>
 
@@ -109,7 +114,7 @@ const LoginForm = () => {
       <Button
         type="button"
         variant="outline"
-        className="w-full border border-gray-300 text-black py-3 rounded-lg text-base font-medium hover:bg-gray-50 transition-colors duration-200"
+        className="w-full border border-gray-300 text-black py-3 rounded-lg text-base font-medium hover:bg-gray-50 hover:cursor-pointer transition-colors duration-200"
       >
         Continue with Google
       </Button>
