@@ -36,8 +36,8 @@ VYBE follows an **Apple ecosystem design philosophy** — content-first, elegant
 
 ### Color Palette
 
-- **Primary Background:** Pure white `#FFFFFF`
-- **Secondary Background:** Off-white/light gray `#F9F9F9` or `#FAFAFA`
+- **Primary Background:** Off-white/light gray `#F9F9F9` or `#FAFAFA` (Tailwind: `bg-gray-50`)
+- **Secondary Background:** Pure white `#FFFFFF`
 - **Text Primary:** Deep black `#000000` or `#1A1A1A`
 - **Text Secondary:** Medium gray `#666666`
 - **Text Tertiary:** Light gray `#999999`
