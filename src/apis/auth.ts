@@ -10,18 +10,22 @@ export interface AuthAccount {
   email: string;
 }
 
-export interface LoginResponseData {
+export interface AuthResponseData {
   accessToken: string;
-  refreshToken: string;
   authAccount: AuthAccount;
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
   success: boolean;
   message: string;
-  data: LoginResponseData;
+  data: AuthResponseData;
   timestamp: string;
   traceId: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
 }
 
 export interface RegisterRequest {
@@ -29,17 +33,19 @@ export interface RegisterRequest {
   password: string;
 }
 
-export interface RegisterResponse {
+export interface RefreshResponse {
   success: boolean;
   message: string;
-  data: LoginResponseData;
+  data: {
+    accessToken: string;
+  };
   timestamp: string;
   traceId: string;
 }
 
 export const authAPI = {
-  login: async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await axiosInstance.post<LoginResponse>(
+  login: async (data: LoginRequest): Promise<AuthResponse> => {
+    const response = await axiosInstance.post<AuthResponse>(
       '/auth/login',
       data
     );
@@ -52,8 +58,8 @@ export const authAPI = {
     return response.data;
   },
 
-  register: async (data: RegisterRequest): Promise<RegisterResponse> => {
-    const response = await axiosInstance.post<RegisterResponse>(
+  register: async (data: RegisterRequest): Promise<AuthResponse> => {
+    const response = await axiosInstance.post<AuthResponse>(
       '/auth/register',
       data
     );
@@ -61,6 +67,19 @@ export const authAPI = {
     // Check if API returned success: false even with 200 status
     if (!response.data.success) {
       throw new Error(response.data.message || 'Registration failed');
+    }
+
+    return response.data;
+  },
+
+  refresh: async (): Promise<RefreshResponse> => {
+    const response = await axiosInstance.post<RefreshResponse>(
+      '/auth/refresh'
+    );
+
+    // Check if API returned success: false even with 200 status
+    if (!response.data.success) {
+      throw new Error(response.data.message || 'Token refresh failed');
     }
 
     return response.data;

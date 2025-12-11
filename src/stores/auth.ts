@@ -7,11 +7,11 @@ import { authAPI, AuthAccount, RegisterRequest } from '@/apis/auth';
 interface AuthState {
   user: AuthAccount | null;
   token: string | null;
-  refreshToken: string | null;
   isLoading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (data: RegisterRequest) => Promise<void>;
+  refreshToken: () => Promise<void>;
   logout: () => void;
   clearError: () => void;
   setToken: (token: string) => void;
@@ -22,7 +22,6 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       token: null,
-      refreshToken: null,
       isLoading: false,
       error: null,
 
@@ -34,7 +33,6 @@ export const useAuthStore = create<AuthState>()(
           // Update state - persist middleware will auto-save to localStorage
           set({
             token: response.data.accessToken,
-            refreshToken: response.data.refreshToken,
             user: response.data.authAccount,
             isLoading: false,
           });
@@ -76,7 +74,6 @@ export const useAuthStore = create<AuthState>()(
           // Update state - persist middleware will auto-save to localStorage
           set({
             token: response.data.accessToken,
-            refreshToken: response.data.refreshToken,
             user: response.data.authAccount,
             isLoading: false,
           });
@@ -110,11 +107,33 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
+      refreshToken: async () => {
+        try {
+          const response = await authAPI.refresh();
+
+          // Update token from refresh response
+          set({
+            token: response.data.accessToken,
+            isLoading: false,
+          });
+        } catch {
+          // If refresh fails, logout user
+          set({
+            user: null,
+            token: null,
+            error: 'Session expired. Please login again.',
+            isLoading: false,
+          });
+
+          // Redirect to login
+          window.location.href = '/auth/login';
+        }
+      },
+
       logout: () => {
         set({
           user: null,
           token: null,
-          refreshToken: null,
           error: null,
         });
       },
@@ -132,7 +151,6 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         user: state.user,
         token: state.token,
-        refreshToken: state.refreshToken,
       }), // Only persist these fields
     }
   )
