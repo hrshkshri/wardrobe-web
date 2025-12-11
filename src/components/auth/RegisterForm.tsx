@@ -50,7 +50,9 @@ const RegisterForm = () => {
   return (
     <>
       <div className="mb-12 text-center">
-        <h2 className="text-3xl font-semibold text-black mb-3">Create Account</h2>
+        <h2 className="text-3xl font-semibold text-black mb-3">
+          Create Account
+        </h2>
         <p className="text-base text-gray-600">Sign up to get started</p>
       </div>
 
