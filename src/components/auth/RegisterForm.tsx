@@ -46,7 +46,9 @@ const RegisterForm = () => {
   };
 
   const passwordRequirements = getPasswordRequirements(formData.password);
-  const allRequirementsMet = Object.values(passwordRequirements).every(req => req);
+  const allRequirementsMet = Object.values(passwordRequirements).every(
+    (req) => req
+  );
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -143,19 +145,49 @@ const RegisterForm = () => {
             <p className="text-xs text-red-600">{errors.password}</p>
           ) : !allRequirementsMet && formData.password ? (
             <div className="text-xs space-y-1">
-              <p className={passwordRequirements.minLength ? 'text-green-600 line-through' : 'text-gray-500'}>
+              <p
+                className={
+                  passwordRequirements.minLength
+                    ? 'text-green-600 line-through'
+                    : 'text-gray-500'
+                }
+              >
                 • At least 8 characters
               </p>
-              <p className={passwordRequirements.lowercase ? 'text-green-600 line-through' : 'text-gray-500'}>
+              <p
+                className={
+                  passwordRequirements.lowercase
+                    ? 'text-green-600 line-through'
+                    : 'text-gray-500'
+                }
+              >
                 • Lowercase letter (a-z)
               </p>
-              <p className={passwordRequirements.uppercase ? 'text-green-600 line-through' : 'text-gray-500'}>
+              <p
+                className={
+                  passwordRequirements.uppercase
+                    ? 'text-green-600 line-through'
+                    : 'text-gray-500'
+                }
+              >
                 • Uppercase letter (A-Z)
               </p>
-              <p className={passwordRequirements.number ? 'text-green-600 line-through' : 'text-gray-500'}>
+              <p
+                className={
+                  passwordRequirements.number
+                    ? 'text-green-600 line-through'
+                    : 'text-gray-500'
+                }
+              >
                 • Number (0-9)
               </p>
-              <p className={passwordRequirements.special ? 'text-green-600 line-through' : 'text-gray-500'}>
+              <p
+                className={
+                  passwordRequirements.special
+                    ? 'text-green-600 line-through'
+                    : 'text-gray-500'
+                }
+              >
                 • Special character (@$!%*?&)
               </p>
             </div>
