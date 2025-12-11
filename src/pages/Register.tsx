@@ -35,7 +35,12 @@ const Register = () => {
       return;
     }
 
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.password
+    ) {
       setError('Please fill in all fields');
       return;
     }
@@ -73,7 +78,9 @@ const Register = () => {
         <div className="w-full max-w-md bg-white rounded-2xl shadow-md border border-gray-100 p-8">
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-2">Join My Wardrobe</h2>
-            <p className="text-sm text-gray-500">Choose how you'd like to get started</p>
+            <p className="text-sm text-gray-500">
+              Choose how you'd like to get started
+            </p>
           </div>
 
           <div className="space-y-4">
@@ -84,8 +91,12 @@ const Register = () => {
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-semibold text-black mb-1">I'm Building My Wardrobe</h3>
-                  <p className="text-sm text-gray-500">Organize your clothes, create outfits, get styling advice</p>
+                  <h3 className="font-semibold text-black mb-1">
+                    I'm Building My Wardrobe
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Organize your clothes, create outfits, get styling advice
+                  </p>
                 </div>
                 <div className="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center">
                   <div className="w-3 h-3 rounded-full bg-black opacity-0 group-hover:opacity-100"></div>
@@ -100,8 +111,12 @@ const Register = () => {
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-semibold text-black mb-1">I'm a Professional Stylist</h3>
-                  <p className="text-sm text-gray-500">Build your client base and offer styling services</p>
+                  <h3 className="font-semibold text-black mb-1">
+                    I'm a Professional Stylist
+                  </h3>
+                  <p className="text-sm text-gray-500">
+                    Build your client base and offer styling services
+                  </p>
                 </div>
                 <div className="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center">
                   <div className="w-3 h-3 rounded-full bg-black opacity-0 group-hover:opacity-100"></div>
@@ -113,7 +128,10 @@ const Register = () => {
           {/* Sign In Link */}
           <p className="text-center text-sm text-gray-500 mt-12">
             Already have an account?{' '}
-            <Link to="/auth/login" className="text-black font-medium hover:underline">
+            <Link
+              to="/auth/login"
+              className="text-black font-medium hover:underline"
+            >
               Sign in
             </Link>
           </p>
@@ -143,7 +161,9 @@ const Register = () => {
         <div className="mb-12">
           <h2 className="text-2xl font-semibold mb-2">Create Account</h2>
           <p className="text-sm text-gray-500">
-            {role === 'user' ? 'Start organizing your wardrobe' : 'Join our stylist community'}
+            {role === 'user'
+              ? 'Start organizing your wardrobe'
+              : 'Join our stylist community'}
           </p>
         </div>
 
@@ -151,7 +171,10 @@ const Register = () => {
           {/* First Name & Last Name */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label htmlFor="firstName" className="block text-sm font-medium text-black">
+              <label
+                htmlFor="firstName"
+                className="block text-sm font-medium text-black"
+              >
                 First Name
               </label>
               <Input
@@ -165,7 +188,10 @@ const Register = () => {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="lastName" className="block text-sm font-medium text-black">
+              <label
+                htmlFor="lastName"
+                className="block text-sm font-medium text-black"
+              >
                 Last Name
               </label>
               <Input
@@ -182,7 +208,10 @@ const Register = () => {
 
           {/* Email */}
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-black">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-black"
+            >
               Email
             </label>
             <Input
@@ -198,7 +227,10 @@ const Register = () => {
 
           {/* Password */}
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-black">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-black"
+            >
               Password
             </label>
             <Input
@@ -215,7 +247,10 @@ const Register = () => {
 
           {/* Confirm Password */}
           <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-black">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-black"
+            >
               Confirm Password
             </label>
             <Input
@@ -278,7 +313,10 @@ const Register = () => {
         {/* Sign In Link */}
         <p className="text-center text-sm text-gray-500 mt-8">
           Already have an account?{' '}
-          <Link to="/auth/login" className="text-black font-medium hover:underline">
+          <Link
+            to="/auth/login"
+            className="text-black font-medium hover:underline"
+          >
             Sign in
           </Link>
         </p>
