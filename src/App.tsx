@@ -6,6 +6,7 @@ import {
 import { Toaster } from 'sonner';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import DashboardLayout from './layout/DashboardLayout';
 
@@ -13,6 +14,10 @@ const appRouter = createBrowserRouter([
   {
     path: '/auth/login',
     element: <Login />,
+  },
+  {
+    path: '/auth/register',
+    element: <Register />,
   },
   {
     path: '/dashboard',
