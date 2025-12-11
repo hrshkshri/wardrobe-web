@@ -73,9 +73,7 @@ export const authAPI = {
   },
 
   refresh: async (): Promise<RefreshResponse> => {
-    const response = await axiosInstance.post<RefreshResponse>(
-      '/auth/refresh'
-    );
+    const response = await axiosInstance.post<RefreshResponse>('/auth/refresh');
 
     // Check if API returned success: false even with 200 status
     if (!response.data.success) {
