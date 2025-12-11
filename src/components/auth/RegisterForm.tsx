@@ -3,17 +3,21 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuthStore } from '@/stores/auth';
+import { registerSchema } from '@/schemas/auth';
+import { ZodError } from 'zod';
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const { register, isLoading, token } = useAuthStore();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -21,34 +25,60 @@ const RegisterForm = () => {
       ...prev,
       [name]: value,
     }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: '',
+      }));
+    }
   };
 
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+  // Check password requirements
+  const getPasswordRequirements = (password: string) => {
+    return {
+      minLength: password.length >= 8,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /\d/.test(password),
+      special: /[@$!%*?&]/.test(password),
+    };
+  };
+
+  const passwordRequirements = getPasswordRequirements(formData.password);
+  const allRequirementsMet = Object.values(passwordRequirements).every(req => req);
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
+    setErrors({});
 
-    if (!formData.email || !formData.password) {
-      setError('Please fill in all fields');
-      return;
+    try {
+      // Validate input with Zod
+      registerSchema.parse(formData);
+
+      // Call register from auth store
+      await register({
+        email: formData.email,
+        password: formData.password,
+      });
+    } catch (err) {
+      if (err instanceof ZodError) {
+        // Map Zod errors to field errors
+        const fieldErrors: Record<string, string> = {};
+        err.issues.forEach((issue) => {
+          const path = issue.path[0] as string;
+          fieldErrors[path] = issue.message;
+        });
+        setErrors(fieldErrors);
+      }
+      // API errors are already handled in auth store with toast
     }
-
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setError('Please enter a valid email');
-      return;
-    }
-
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters');
-      return;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    navigate('/dashboard');
   };
+
+  // Navigate to dashboard when token is set
+  if (token) {
+    navigate('/dashboard');
+  }
 
   return (
     <>
@@ -77,6 +107,9 @@ const RegisterForm = () => {
             placeholder="you@example.com"
             className="w-full border-b border-gray-300 bg-transparent px-0 py-3 text-base placeholder-gray-400 focus:border-black focus:outline-none focus:ring-0 transition-colors"
           />
+          {errors.email && (
+            <p className="text-xs text-red-600">{errors.email}</p>
+          )}
         </div>
 
         {/* Password Field */}
@@ -106,7 +139,27 @@ const RegisterForm = () => {
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-2">At least 8 characters</p>
+          {errors.password ? (
+            <p className="text-xs text-red-600">{errors.password}</p>
+          ) : !allRequirementsMet && formData.password ? (
+            <div className="text-xs space-y-1">
+              <p className={passwordRequirements.minLength ? 'text-green-600 line-through' : 'text-gray-500'}>
+                • At least 8 characters
+              </p>
+              <p className={passwordRequirements.lowercase ? 'text-green-600 line-through' : 'text-gray-500'}>
+                • Lowercase letter (a-z)
+              </p>
+              <p className={passwordRequirements.uppercase ? 'text-green-600 line-through' : 'text-gray-500'}>
+                • Uppercase letter (A-Z)
+              </p>
+              <p className={passwordRequirements.number ? 'text-green-600 line-through' : 'text-gray-500'}>
+                • Number (0-9)
+              </p>
+              <p className={passwordRequirements.special ? 'text-green-600 line-through' : 'text-gray-500'}>
+                • Special character (@$!%*?&)
+              </p>
+            </div>
+          ) : null}
         </div>
 
         {/* Confirm Password Field */}
@@ -138,21 +191,18 @@ const RegisterForm = () => {
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
+          {errors.confirmPassword && (
+            <p className="text-xs text-red-600">{errors.confirmPassword}</p>
+          )}
         </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="text-sm text-red-600 bg-red-50 p-4 rounded-lg">
-            {error}
-          </div>
-        )}
 
         {/* Sign Up Button */}
         <Button
           type="submit"
-          className="w-full mt-10 py-3 rounded-lg text-base font-medium hover:cursor-pointer"
+          disabled={isLoading}
+          className="w-full mt-10 py-3 rounded-lg text-base font-medium disabled:opacity-50 hover:cursor-pointer"
         >
-          Create Account
+          {isLoading ? 'Creating Account...' : 'Create Account'}
         </Button>
       </form>
 

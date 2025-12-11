@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/stores/auth';
@@ -11,24 +10,47 @@ import { ZodError } from 'zod';
 const LoginForm = () => {
   const navigate = useNavigate();
   const { login, isLoading, token } = useAuthStore();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: '',
+      }));
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrors({});
 
     try {
       // Validate input with Zod
-      loginSchema.parse({ email, password });
+      loginSchema.parse(formData);
 
       // Call login from auth store
-      await login(email, password);
+      await login(formData.email, formData.password);
     } catch (err) {
       if (err instanceof ZodError) {
-        // Handle validation errors
-        const firstError = err.issues[0]?.message;
-        toast.error(firstError || 'Validation failed');
+        // Map Zod errors to field errors
+        const fieldErrors: Record<string, string> = {};
+        err.issues.forEach((issue) => {
+          const path = issue.path[0] as string;
+          fieldErrors[path] = issue.message;
+        });
+        setErrors(fieldErrors);
       }
       // API errors are already handled in auth store with toast
     }
@@ -58,11 +80,15 @@ const LoginForm = () => {
           <Input
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
             placeholder="you@example.com"
             className="w-full border-b border-gray-300 bg-transparent px-0 py-3 text-base placeholder-gray-400 focus:border-black focus:outline-none focus:ring-0 transition-colors"
           />
+          {errors.email && (
+            <p className="text-xs text-red-600">{errors.email}</p>
+          )}
         </div>
 
         {/* Password Field */}
@@ -77,8 +103,9 @@ const LoginForm = () => {
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
               placeholder="••••••••"
               className="w-full border-b border-gray-300 bg-transparent px-0 py-3 pr-8 text-base placeholder-gray-400 focus:border-black focus:outline-none focus:ring-0 transition-colors"
             />
@@ -91,6 +118,9 @@ const LoginForm = () => {
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
+          {errors.password && (
+            <p className="text-xs text-red-600">{errors.password}</p>
+          )}
         </div>
 
         {/* Sign In Button */}
