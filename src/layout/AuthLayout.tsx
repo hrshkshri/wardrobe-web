@@ -12,7 +12,9 @@ const AuthLayout = ({ children, hideFooter = false }: AuthLayoutProps) => {
       {/* Logo at top */}
       <div className="absolute top-8">
         <div className="text-center">
-          <div className="text-3xl font-semibold text-black tracking-tight">My Wardrobe</div>
+          <div className="text-3xl font-semibold text-black tracking-tight">
+            My Wardrobe
+          </div>
         </div>
       </div>
 
