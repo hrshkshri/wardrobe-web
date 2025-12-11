@@ -131,7 +131,9 @@ const RegisterForm = () => {
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+              aria-label={
+                showConfirmPassword ? 'Hide password' : 'Show password'
+              }
             >
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
