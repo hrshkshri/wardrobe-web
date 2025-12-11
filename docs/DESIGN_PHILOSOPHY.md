@@ -42,7 +42,7 @@ VYBE follows an **Apple ecosystem design philosophy** — content-first, elegant
 - **Text Secondary:** Medium gray `#666666`
 - **Text Tertiary:** Light gray `#999999`
 - **Borders:** `#E5E5E5` or `#EBEBEB`
-- **Accents:** Single accent color TBD (used sparingly for CTAs)
+- **Accent (Primary CTA):** Deep teal `#1B4D3E` (used sparingly for CTAs, hover states, active elements)
 
 ### Spacing System
 

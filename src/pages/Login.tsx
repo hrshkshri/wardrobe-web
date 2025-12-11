@@ -93,7 +93,7 @@ const Login = () => {
             {/* Sign In Button */}
             <Button
               type="submit"
-              className="w-full mt-8 bg-black text-white py-2 rounded text-sm font-medium hover:bg-gray-800 transition-colors"
+              className="w-full mt-8 py-2 rounded text-sm font-medium"
             >
               Sign In
             </Button>
